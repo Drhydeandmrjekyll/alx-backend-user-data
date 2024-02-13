@@ -17,6 +17,7 @@ app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
+from . import app
 
 @app.errorhandler(404)
 def not_found(error) -> str:
