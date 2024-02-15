@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Authentication module for managing API authentication."""
 
+import os
 from flask import request
-from typing import List, TypeVar
+from typing import List
 
 
 class Auth:
@@ -31,12 +32,26 @@ class Auth:
         return request.headers.get('Authorization')
 
     def current_user(self, request=None):
-        """ Method to get  current user """
+        """ Method to get current user """
         return None
 
     def session_cookie(self, request=None):
-        """ Returns a cookie value from a request """
+        """ Returns cookie value from request """
         if request is None:
             return None
         session_name = os.getenv("SESSION_NAME", "_my_session_id")
         return request.cookies.get(session_name)
+
+
+class SessionAuth(Auth):
+    """ SessionAuth class """
+
+    user_id_by_session_id = {}
+
+    def create_session(self, user_id: str = None) -> str:
+        """ Create Session ID for user """
+        if not user_id or not isinstance(user_id, str):
+            return None
+        session_id = str(uuid.uuid4())
+        self.user_id_by_session_id[session_id] = user_id
+        return session_id
