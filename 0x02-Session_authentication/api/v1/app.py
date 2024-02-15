@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Route module for the API
 """
@@ -10,8 +10,8 @@ from flask_cors import CORS
 
 from api.v1.views import app_views
 
-# Import SessionExpAuth class
-from api.v1.auth.session_exp_auth import SessionExpAuth
+# Import SessionDBAuth class
+from api.v1.auth.session_db_auth import SessionDBAuth
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
@@ -20,12 +20,12 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 # Instantiate auth variable based on value of AUTH_TYPE environment variable
 auth_type = getenv("AUTH_TYPE")
 
-if auth_type == "session_auth":
-    auth = SessionExpAuth()
+if auth_type == "session_db_auth":
+    auth = SessionDBAuth()
 else:
-    # Default to BasicAuth if AUTH_TYPE is not set to session_auth
-    from api.v1.auth.basic_auth import BasicAuth
-    auth = BasicAuth()
+    # Default to SessionExpAuth if AUTH_TYPE is not set to session_db_auth
+    from api.v1.auth.session_exp_auth import SessionExpAuth
+    auth = SessionExpAuth()
 
 
 @app.errorhandler(404)
