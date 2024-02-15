@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Route module for the API
 """
@@ -43,10 +43,14 @@ def before_request():
         '/api/v1/status/',
         '/api/v1/unauthorized/',
         '/api/v1/forbidden/'
+        '/api/v1/auth_session/login/'
     ]
     if request.path not in excluded_paths:
         if not auth.require_auth(request.path, excluded_paths):
             return abort(404)
+        if auth.authorization_header(request) is None and auth.session_cookie(
+                request) is None:
+            return abort(401)
         if auth.authorization_header(request) is None:
             return abort(401)
         if request.current_user is None:
