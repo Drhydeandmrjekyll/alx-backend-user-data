@@ -5,19 +5,21 @@ Main file
 from db import DB
 from user import User
 
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
+
+
 my_db = DB()
 
-user = my_db.add_user("test@test.com", "PwdHashed")
+email = 'test@test.com'
+hashed_password = "hashedPwd"
+
+user = my_db.add_user(email, hashed_password)
 print(user.id)
 
-# Find user by email
-find_user = my_db.find_user_by(email="test@test.com")
-
-# If find_user is a list of users
-if isinstance(find_user, list):
-    for user in find_user:
-        print(user.id)
-else:
-    # If find_user is a single user
-    print(find_user.id)
+try:
+    my_db.update_user(user.id, hashed_password='NewPwd')
+    print("Password updated")
+except ValueError:
+    print("Error")
 
