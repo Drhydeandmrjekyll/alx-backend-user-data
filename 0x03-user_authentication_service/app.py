@@ -1,13 +1,13 @@
-from flask import Flask, jsonify, request, redirect
+from flask import Flask, jsonify, request
 from auth import Auth
 
 app = Flask(__name__)
 AUTH = Auth()
 
 
-# Route to handle logout
-@app.route('/sessions', methods=['DELETE'])
-def logout():
+# Route to handle profile
+@app.route('/profile', methods=['GET'])
+def profile():
     # Get the session ID from the request cookies
     session_id = request.cookies.get('session_id')
 
@@ -15,13 +15,11 @@ def logout():
     user = AUTH.get_user_from_session_id(session_id)
 
     if user:
-        # Destroy the session
-        AUTH.destroy_session(user.id)
-        # Redirect the user to GET /
-        return redirect('/')
+        # If user exists, respond with a 200 HTTP status and user's email
+        return jsonify({"email": user.email}), 200
     else:
-        # If the user does not exist, respond with a 403 HTTP status
-        return jsonify({"message": "User not found"}), 403
+        # If session ID invalid or user does not exist,respond 403 HTTP status
+        return jsonify({"message": "Forbidden"}), 403
 
 
 if __name__ == "__main__":

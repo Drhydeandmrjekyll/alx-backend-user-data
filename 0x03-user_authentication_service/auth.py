@@ -1,3 +1,6 @@
+from db import DB
+
+
 class Auth:
     """Auth class to interact with the authentication database."""
 
