@@ -1,4 +1,3 @@
-import uuid
 from db import DB
 from user import User
 
@@ -19,9 +18,10 @@ class Auth:
 
     def create_session(self, email: str) -> str:
         """Create session for the user corresponding to the provided email."""
-        user = self._db.find_user_by(email=email)
-        if user:
-            session_id = str(uuid.uuid4())
-            self._db.update_user(user.id, session_id=session_id)
-            return session_id
-        return None
+        # Implementation of create_session method goes here...
+
+    def get_user_from_session_id(self, session_id: str) -> User:
+        """Get user corresponding to the provided session ID."""
+        if session_id is None:
+            return None
+        return self._db.find_user_by(session_id=session_id)
