@@ -1,6 +1,16 @@
 import bcrypt
 from db import DB
 from user import User
+import uuid
+
+
+def _generate_uuid() -> str:
+    """Generate a string representation of a new UUID.
+
+    Returns:
+        str: String representation of the generated UUID.
+    """
+    return str(uuid.uuid4())
 
 
 def _hash_password(password: str) -> bytes:
