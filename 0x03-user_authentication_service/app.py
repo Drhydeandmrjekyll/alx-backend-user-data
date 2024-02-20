@@ -1,34 +1,27 @@
-from flask import Flask, jsonify, request, make_response, abort
+from flask import Flask, jsonify, request, redirect
 from auth import Auth
 
 app = Flask(__name__)
 AUTH = Auth()
 
 
-@app.route('/users', methods=['POST'])
-def create_user():
-    email = request.form.get('email')
-    password = request.form.get('password')
+# Route to handle logout
+@app.route('/sessions', methods=['DELETE'])
+def logout():
+    # Get the session ID from the request cookies
+    session_id = request.cookies.get('session_id')
 
-    try:
-        user = AUTH.register_user(email, password)
-        return jsonify({"email": user.email, "message": "user created"})
-    except ValueError as e:
-        return jsonify({"message": str(e)}), 400
+    # Find the user with the session ID
+    user = AUTH.get_user_from_session_id(session_id)
 
-
-@app.route('/sessions', methods=['POST'])
-def login():
-    email = request.form.get('email')
-    password = request.form.get('password')
-
-    if AUTH.valid_login(email, password):
-        session_id = AUTH.create_session(email)
-        response = jsonify({"email": email, "message": "logged in"})
-        response.set_cookie('session_id', session_id)
-        return response
+    if user:
+        # Destroy the session
+        AUTH.destroy_session(user.id)
+        # Redirect the user to GET /
+        return redirect('/')
     else:
-        abort(401)
+        # If the user does not exist, respond with a 403 HTTP status
+        return jsonify({"message": "User not found"}), 403
 
 
 if __name__ == "__main__":
