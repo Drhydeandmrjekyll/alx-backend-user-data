@@ -2,6 +2,7 @@ import bcrypt
 from db import DB
 from user import User
 
+
 def _hash_password(password: str) -> bytes:
     """Hashes the input password using bcrypt.
 
@@ -45,5 +46,6 @@ class Auth:
         hashed_password = _hash_password(password)
 
         # Create new user in database
-        new_user = self._db.add_user(email=email, hashed_password=hashed_password)
+        new_user = self._db.add_user(
+                email=email, hashed_password=hashed_password)
         return new_user
