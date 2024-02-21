@@ -1,25 +1,20 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from auth import Auth
 
 app = Flask(__name__)
 AUTH = Auth()
 
 
-# Route to handle profile
-@app.route('/profile', methods=['GET'])
-def profile():
-    # Get the session ID from the request cookies
-    session_id = request.cookies.get('session_id')
+@app.route('/reset_password', methods=['POST'])
+def get_reset_password_token():
+    email = request.form.get('email')
 
-    # Find the user with the session ID
-    user = AUTH.get_user_from_session_id(session_id)
+    try:
+        reset_token = AUTH.get_reset_password_token(email)
+    except ValueError:
+        abort(403)
 
-    if user:
-        # If user exists, respond with a 200 HTTP status and user's email
-        return jsonify({"email": user.email}), 200
-    else:
-        # If session ID invalid or user does not exist,respond 403 HTTP status
-        return jsonify({"message": "Forbidden"}), 403
+    return jsonify({"email": email, "reset_token": reset_token}), 200
 
 
 if __name__ == "__main__":
