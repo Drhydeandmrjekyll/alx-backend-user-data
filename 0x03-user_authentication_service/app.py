@@ -5,6 +5,39 @@ app = Flask(__name__)
 AUTH = Auth()
 
 
+# Define route for registering users
+@app.route('/users', methods=['POST'])
+def register_user():
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    try:
+        # Call register_user method of your Auth class to register user
+        AUTH.register_user(email, password)
+    except ValueError:
+        # Handle the case where the user cannot be registered
+        abort(400)
+
+    return jsonify({"email": email, "message": "User created"}), 200
+
+
+@app.route('/sessions', methods=['POST'])
+def log_in():
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    try:
+        # Call log_in method of your Auth class to log in user
+        session_id = AUTH.log_in(email, password)
+    except ValueError:
+        # Handle the case where the user cannot be logged in
+        abort(401)
+
+    return (jsonify({"session_id": session_id, "message": "User logged in"}),
+            200)
+
+
+# Route for updating password
 @app.route('/reset_password', methods=['PUT'])
 def update_password():
     email = request.form.get('email')
