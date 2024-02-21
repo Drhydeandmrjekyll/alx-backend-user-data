@@ -1,25 +1,31 @@
+import uuid
 from db import DB
 
 
 class Auth:
-    """Auth class to interact with the authentication database."""
-
     def __init__(self):
         self._db = DB()
 
-    def destroy_session(self, user_id: int) -> None:
-        """Destroy the session ID for the corresponding user.
+    def get_reset_password_token(self, email):
+        """Generate a reset password token for user corresponding to the email.
 
         Args:
-            user_id (int): ID of the user whose session is to be destroyed.
+            email (str): Email of the user.
 
         Returns:
-            None
-        """
-        # Get user from the database using the user_id
-        user = self._db.find_user_by_id(user_id)
+            str: Reset password token.
 
-        # Check if user exists
-        if user:
-            # Updates user'session ID to None
-            self._db.update_user_session(user_id, None)
+        Raises:
+            ValueError: If no user is found with provided email.
+        """
+        user = self._db.find_user_by(email=email)
+        if not user:
+            raise ValueError(f"No user found with email: {email}")
+
+        # Generate UUID for reset password token
+        reset_token = str(uuid.uuid4())
+
+        # Update user's reset_token database field
+        self._db.update_user_reset_token(user.id, reset_token)
+
+        return reset_token
