@@ -2,29 +2,16 @@
 """
 Main file
 """
-from db import DB
-from user import User
+from auth import Auth
 
-from sqlalchemy.exc import InvalidRequestError
-from sqlalchemy.orm.exc import NoResultFound
+email = 'bob@bob.com'
+password = 'MyPwdOfBob'
+auth = Auth()
 
+auth.register_user(email, password)
 
-my_db = DB()
+print(auth.valid_login(email, password))
 
-user = my_db.add_user("test@test.com", "PwdHashed")
-print(user.id)
+print(auth.valid_login(email, "WrongPwd"))
 
-find_user = my_db.find_user_by(email="test@test.com")
-print(find_user.id)
-
-try:
-    find_user = my_db.find_user_by(email="test2@test.com")
-    print(find_user.id)
-except NoResultFound:
-    print("Not found")
-
-try:
-    find_user = my_db.find_user_by(no_email="test@test.com")
-    print(find_user.id)
-except InvalidRequestError:
-    print("Invalid")
+print(auth.valid_login("unknown@email", password))
