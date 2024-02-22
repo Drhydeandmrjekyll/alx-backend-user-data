@@ -2,10 +2,10 @@
 """
 DB module
 """
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from sqlalchemy.exc import InvalidRequestError, NoResultFound
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
 
 from user import Base, User
 
@@ -56,14 +56,15 @@ class DB:
         Find a user by the specified criteria.
 
         Args:
-            **kwargs: Variable keyword arguments representing the search criteria.
-                  These arguments should correspond to attributes of the User class.
+        **kwargs: Variable keyword arguments representing the search criteria.
+        These arguments should correspond to attributes of the User class.
 
         Returns:
             User: The User object matching the search criteria.
 
         Raises:
-            InvalidRequestError: If the provided search criteria do not correspond to valid attributes of the User class.
+            InvalidRequestError: If the provided search criteria do not
+            correspond to valid attributes of the User class.
 
         """
         for key in kwargs.keys():
@@ -82,11 +83,13 @@ class DB:
 
         Args:
             user_id (int): The ID of the user to update.
-            **kwargs: Variable keyword arguments representing the attributes to update.
-                  These arguments should correspond to attributes of the User class.
+            **kwargs: Variable keyword arguments representing
+                        the attributes to update.
+            These arguments should correspond to attributes of the User class.
 
         Raises:
-            ValueError: If any of the provided attributes are not valid attributes of the User class.
+            ValueError: If any of the provided attributes are
+                        not valid attributes of the User class.
 
         """
         user_to_update = self.find_user_by(id=user_id)
