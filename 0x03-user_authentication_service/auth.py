@@ -5,6 +5,7 @@ Module to hash_password and interact with auth_DB
 import bcrypt
 from sqlalchemy.orm.exc import NoResultFound
 from db import DB
+import uuid
 
 from user import User
 
@@ -22,6 +23,13 @@ def _hash_password(password: str) -> bytes:
     hashed_pwd = bcrypt.hashpw(encoded_pwd, salt)
 
     return hashed_pwd
+
+
+def _generate_uuid() -> str:
+    """
+    Generate a new UUID string representation.
+    """
+    return str(uuid.uuid4())
 
 
 class Auth:
