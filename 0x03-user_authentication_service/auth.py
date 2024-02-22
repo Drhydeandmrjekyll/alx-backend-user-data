@@ -93,6 +93,23 @@ class Auth:
 
         return session_id
 
+    def get_user_from_session_id(self, session_id: str) -> Union[User, None]:
+        """
+        Retrieve user corresponding to given session ID.
+
+        Args:
+            session_id (str): The session ID to look up.
+
+        Returns:
+            Union[User, None]: The corresponding User object
+            if found, else None.
+        """
+        try:
+            user = self._db.find_user_by(session_id=session_id)
+            return user
+        except NoResultFound:
+            return None
+
 
 if __name__ == '__main__':
     email = 'me@me.com'
