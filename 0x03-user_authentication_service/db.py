@@ -36,6 +36,14 @@ class DB:
 
     def add_user(self, email: str, hashed_password: str) -> User:
         """
+        Add a new user to the database.
+
+        Args:
+            email (str): The email of the user.
+            hashed_password (str): The hashed password of the user.
+
+        Returns:
+            User: The newly added User object.
 
         """
         user = User(email=email, hashed_password=hashed_password)
@@ -45,6 +53,17 @@ class DB:
 
     def find_user_by(self, **kwargs) -> User:
         """
+        Find a user by the specified criteria.
+
+        Args:
+            **kwargs: Variable keyword arguments representing the search criteria.
+                  These arguments should correspond to attributes of the User class.
+
+        Returns:
+            User: The User object matching the search criteria.
+
+        Raises:
+            InvalidRequestError: If the provided search criteria do not correspond to valid attributes of the User class.
 
         """
         for key in kwargs.keys():
@@ -59,6 +78,15 @@ class DB:
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """
+        Update a user with the specified user ID using the provided attributes.
+
+        Args:
+            user_id (int): The ID of the user to update.
+            **kwargs: Variable keyword arguments representing the attributes to update.
+                  These arguments should correspond to attributes of the User class.
+
+        Raises:
+            ValueError: If any of the provided attributes are not valid attributes of the User class.
 
         """
         user_to_update = self.find_user_by(id=user_id)
