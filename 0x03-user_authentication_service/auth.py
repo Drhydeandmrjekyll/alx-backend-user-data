@@ -78,6 +78,21 @@ class Auth:
 
         return False
 
+    def create_session(self, email: str) -> str:
+        """
+        Create a new session for the user and return the session ID.
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+        except NoResultFound:
+            return None  # Return None if user does not exist
+
+        session_id = str(uuid.uuid4())  # Generate new UUID for session ID
+        user.session_id = session_id  # Set session ID for user
+        self._db.commit()  # Commit changes to database
+
+        return session_id
+
 
 if __name__ == '__main__':
     email = 'me@me.com'

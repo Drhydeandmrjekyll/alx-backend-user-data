@@ -78,6 +78,9 @@ class DB:
             return user
         raise NoResultFound()
 
+    def commit(self):
+        self._session.commit()
+
     def update_user(self, user_id: int, **kwargs) -> None:
         """
         Update a user with the specified user ID using the provided attributes.
