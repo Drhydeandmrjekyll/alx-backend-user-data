@@ -20,7 +20,7 @@ class DB:
         """
         Initialize a new DB instance
         """
-        self.engine = create_engine("sqlite:///a.db", echo=True)
+        self.engine = create_engine("sqlite:///a.db")
         Base.metadata.drop_all(self.engine)
         Base.metadata.create_all(self.engine)
         self.__session = None
