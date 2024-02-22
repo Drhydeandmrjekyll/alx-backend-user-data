@@ -5,6 +5,7 @@ DB module
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy.exc import InvalidRequestError, NoResultFound
 
 from user import Base, User
 
@@ -41,3 +42,39 @@ class DB:
         self._session.add(user)
         self._session.commit()
         return user
+
+    def find_user_by(self, **kwargs) -> User:
+        """
+
+        """
+        for key in kwargs.keys():
+            if not hasattr(User, key):
+                raise InvalidRequestError()
+
+        user = self._session.query(User).filter_by(**kwargs).first()
+
+        if user:
+            return user
+        raise NoResultFound()
+
+
+if __name__ == '__main__':
+    my_db = DB()
+
+    user = my_db.add_user("test@test.com", "PwdHashed")
+    print(user.id)
+
+    find_user = my_db.find_user_by(email="test@test.com")
+    print(find_user.id)
+
+    try:
+        find_user = my_db.find_user_by(email="test2@test.com")
+        print(find_user.id)
+    except NoResultFound:
+        print("Not found")
+
+    try:
+        find_user = my_db.find_user_by(no_email="test@test.com")
+        print(find_use.id)
+    except InvalidRequestError:
+        print("Invalid")
